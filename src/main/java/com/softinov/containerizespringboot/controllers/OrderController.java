@@ -3,11 +3,13 @@ package com.softinov.containerizespringboot.controllers;
 import com.softinov.containerizespringboot.entities.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -26,7 +28,12 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Order> getOrder(Long id) {
-        return ResponseEntity.ok(orders.stream().filter(order -> order.getId().equals(id)).findFirst().orElse(null));
+    public ResponseEntity<Order> getOrder(@PathVariable Long id) {
+        Optional<Order> order = orders.stream()
+                .filter(o -> o.getId().equals(id))
+                .findFirst();
+
+        return order.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+
     }
 }
