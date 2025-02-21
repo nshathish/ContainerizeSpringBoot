@@ -24,4 +24,9 @@ public class OrderController {
     public ResponseEntity<Iterable<Order>> getOrders() {
         return ResponseEntity.ok(orders);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Order> getOrder(Long id) {
+        return ResponseEntity.ok(orders.stream().filter(order -> order.getId().equals(id)).findFirst().orElse(null));
+    }
 }
